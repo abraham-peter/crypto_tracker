@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crypto Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="crypto_tracker.css" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="top-nav">
+    <ul>
+      <li class="active"><a href="#">Top</a></li>
+      <li><a href="#">Trending</a></li>
+      <li><a href="#">Watchlist</a></li>
+      <li><a href="#">Prediction Markets</a></li>
+      <li><a href="#">Most Visited</a></li>
+      <li><a href="#">New</a></li>
+      <li><a href="#">More <span class="arrow">&#709;</span></a></li>
+    </ul>
+  </nav>
+
+  <p class="section-title">Overview</p>
+  <div class="summary">
+    <div class="summary-cell">
+      <div class="label">Total Value</div>
+      <div class="value">$24,831.40</div>
+      <div class="sub">+$318.22 today</div>
+    </div>
+    <div class="summary-cell">
+      <div class="label">24h Change</div>
+      <div class="value">+1.30%</div>
+      <div class="sub">vs. yesterday</div>
+    </div>
+    <div class="summary-cell">
+      <div class="label">Holdings</div>
+      <div class="value">5 assets</div>
+      <div class="sub">3 up · 2 down</div>
+    </div>
+  </div>
+
+  <p class="section-title">Holdings</p>
+  <div class="holdings-grid">
+    <div class="holdings-header">
+      <div class="col-num">#</div>
+      <div class="col-asset" style="text-align:left">Asset</div>
+      <div class="col-price">Price</div>
+      <div class="col-24h hide-sm">24h</div>
+      <div class="col-7d hide-sm">7d</div>
+      <div class="col-holdings">Holdings</div>
+      <div class="col-value hide-sm">Value</div>
+      <div class="col-chart hide-sm">7d chart</div>
+    </div>
+    <div class="holdings-body">
+
+      <div class="holdings-row">
+        <div class="col-num" style="color:var(--muted)">1</div>
+        <div class="col-asset">
+          <div class="coin-cell">
+            <img src="assets/bitcoin_logo.svg" alt="BTC" class="coin-icon">
+            <div class="coin-name">
+              <strong>BTC</strong>
+              <small>Bitcoin</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-price">$83,204.00</div>
+        <div class="col-24h hide-sm up">+2.14%</div>
+        <div class="col-7d hide-sm down">−3.80%</div>
+        <div class="col-holdings">0.1820</div>
+        <div class="col-value hide-sm">$15,143.13</div>
+        <div class="col-chart hide-sm">
+          <svg class="spark" viewBox="0 0 60 24">
+            <polyline class="sparkline down" points="0,8 10,10 20,18 30,14 40,20 50,16 60,19"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="holdings-row">
+        <div class="col-num" style="color:var(--muted)">2</div>
+        <div class="col-asset">
+          <div class="coin-cell">
+            <img src="assets/eth_logo.svg" alt="ETH" class="coin-icon">
+            <div class="coin-name">
+              <strong>ETH</strong>
+              <small>Ethereum</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-price">$1,968.50</div>
+        <div class="col-24h hide-sm up">+1.72%</div>
+        <div class="col-7d hide-sm up">+4.10%</div>
+        <div class="col-holdings">2.800</div>
+        <div class="col-value hide-sm">$5,511.80</div>
+        <div class="col-chart hide-sm">
+          <svg class="spark" viewBox="0 0 60 24">
+            <polyline class="sparkline up" points="0,20 10,16 20,14 30,10 40,8 50,6 60,4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="holdings-row">
+        <div class="col-num" style="color:var(--muted)">3</div>
+        <div class="col-asset">
+          <div class="coin-cell">
+            <img src="assets/solana_logo.svg" alt="SOL" class="coin-icon">
+            <div class="coin-name">
+              <strong>SOL</strong>
+              <small>Solana</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-price">$132.40</div>
+        <div class="col-24h hide-sm up">+0.88%</div>
+        <div class="col-7d hide-sm up">+6.50%</div>
+        <div class="col-holdings">14.00</div>
+        <div class="col-value hide-sm">$1,853.60</div>
+        <div class="col-chart hide-sm">
+          <svg class="spark" viewBox="0 0 60 24">
+            <polyline class="sparkline up" points="0,18 10,16 20,12 30,14 40,8 50,7 60,5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="holdings-row">
+        <div class="col-num" style="color:var(--muted)">4</div>
+        <div class="col-asset">
+          <div class="coin-cell">
+            <img src="assets/bnb_logo.svg" alt="BNB" class="coin-icon">
+            <div class="coin-name">
+              <strong>BNB</strong>
+              <small>BNB Chain</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-price">$580.20</div>
+        <div class="col-24h hide-sm down">−1.03%</div>
+        <div class="col-7d hide-sm down">−2.20%</div>
+        <div class="col-holdings">2.50</div>
+        <div class="col-value hide-sm">$1,450.50</div>
+        <div class="col-chart hide-sm">
+          <svg class="spark" viewBox="0 0 60 24">
+            <polyline class="sparkline down" points="0,4 10,6 20,8 30,10 40,14 50,16 60,18"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="holdings-row">
+        <div class="col-num" style="color:var(--muted)">5</div>
+        <div class="col-asset">
+          <div class="coin-cell">
+            <img src="assets/xrp_logo.svg" alt="XRP" class="coin-icon">
+            <div class="coin-name">
+              <strong>XRP</strong>
+              <small>Ripple</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-price">$2.146</div>
+        <div class="col-24h hide-sm down">−0.40%</div>
+        <div class="col-7d hide-sm up">+1.80%</div>
+        <div class="col-holdings">400.00</div>
+        <div class="col-value hide-sm">$858.40</div>
+        <div class="col-chart hide-sm">
+          <svg class="spark" viewBox="0 0 60 24">
+            <polyline class="sparkline up" points="0,16 10,14 20,18 30,12 40,10 50,12 60,9"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="section-title">Watchlist</p>
+  <div class="watchlist">
+
+    <div class="watch-card">
+      <div class="w-symbol">ADA / USD</div>
+      <div class="w-price">$0.4382</div>
+      <div class="w-change up">+3.14%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">AVAX / USD</div>
+      <div class="w-price">$21.08</div>
+      <div class="w-change down">−1.90%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">DOT / USD</div>
+      <div class="w-price">$4.61</div>
+      <div class="w-change up">+0.72%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">LINK / USD</div>
+      <div class="w-price">$12.34</div>
+      <div class="w-change down">−2.55%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">MATIC / USD</div>
+      <div class="w-price">$0.3810</div>
+      <div class="w-change up">+1.08%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">ATOM / USD</div>
+      <div class="w-price">$4.92</div>
+      <div class="w-change up">+4.30%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">LTC / USD</div>
+      <div class="w-price">$89.14</div>
+      <div class="w-change up">+2.61%</div>
+    </div>
+
+    <div class="watch-card">
+      <div class="w-symbol">UNI / USD</div>
+      <div class="w-price">$6.77</div>
+      <div class="w-change down">−0.93%</div>
+    </div>
+
+  </div>
+
+  <div class="newsletter">
+    <div class="newsletter-inner">
+      <div class="newsletter-text">
+        <h2>Stay on top of crypto.<br>All the time, any time.</h2>
+        <p>Get the latest prices, market moves, and portfolio alerts delivered straight to your inbox. No spam, unsubscribe whenever.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your e-mail address" />
+          <button type="button">Subscribe</button>
+        </div>
+      </div>
+      <div class="newsletter-art" aria-hidden="true">
+        <img src="assets/image_newsletter.jpg" alt="Stay on top of crypto">
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">crypto/tracker <span>— your portfolio, your data</span></div>
+      <div class="footer-links">
+
+       
+        <a href="https://github.com/yourhandle" target="_blank" rel="noopener" title="GitHub">
+          <img src="assets/github_logo.svg" alt="GitHub" class="footer-icon">
+        </a>
+
+   
+        <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener" title="LinkedIn">
+          <img src="assets/linkedin_logo.svg" alt="LinkedIn" class="footer-icon">
+        </a>
+
+        <a href="https://x.com/yourhandle" target="_blank" rel="noopener" title="X">
+          <img src="assets/x_logo.svg" alt="X" class="footer-icon">
+        </a>
+
+      </div>
+    </div>
+
+    
+  </footer>
+
+</body>
+</html>
