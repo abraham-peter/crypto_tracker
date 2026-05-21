@@ -5,6 +5,7 @@ from routes.transactions import get_transactions
 from routes.transactions import start_revolut_session
 from routes.transactions import get_enable_banking_acces_token
 from routes.transactions import finalize_session
+from routes.transactions import get_account_transactions
 import requests
 
 
@@ -52,3 +53,7 @@ async def get_banks():
 @app.get("/finalize")
 async def finalize(code: str):
     return finalize_session(code)
+
+@app.get("/transactions/{account_uid}")
+async def transactions(account_uid: str):
+    return get_account_transactions(account_uid)

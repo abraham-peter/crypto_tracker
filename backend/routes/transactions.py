@@ -110,3 +110,18 @@ def finalize_session(auth_code: str):
     )
     
     return response.json()
+
+def get_account_transactions(account_uid: str):
+    token = get_enable_banking_acces_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    # Endpoint to fetch transactions for a specific account UID
+    transactions_url = f"https://api.enablebanking.com/accounts/{account_uid}/transactions"
+    
+    # You can optionaly filter by date, e.g. f"{transactions_url}?date_from=2024-01-01"
+    response = requests.get(transactions_url, headers=headers)
+    
+    return response.json()
