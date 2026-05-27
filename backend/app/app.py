@@ -33,9 +33,9 @@ app.add_middleware(
 )
 # create_db_and_tables()
 
-@app.get("/transactions")
-async def transactions(request:Request):
-    return get_transactions()
+# @app.get("/transactions")
+# async def transactions(request:Request):
+#     return get_transactions()
 
 @app.get("/revolut-session")
 async def revolut_session(request:Request):

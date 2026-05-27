@@ -64,7 +64,7 @@ def start_revolut_session():
         "Content-Type": "application/json"
     }
 
-    # FIX: Dynamically calculate 90 days from today
+    #Calculez data de 3 luni
     now = datetime.now(timezone.utc)
     valid_until = now + timedelta(days=90)
     # Formats it exactly as 'YYYY-MM-DDTHH:MM:SSZ'
