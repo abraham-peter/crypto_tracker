@@ -1,18 +1,14 @@
 from fastapi import FastAPI,Request
 from fastapi.middleware.cors import CORSMiddleware
 # from db import create_db_and_tables
-from routes.transactions import get_transactions
-from routes.transactions import start_revolut_session
-from routes.transactions import get_enable_banking_acces_token
-from routes.transactions import finalize_session
-from routes.transactions import get_account_transactions
+from routes.transactions import get_transactions,start_revolut_session,get_enable_banking_acces_token,finalize_session,get_account_transactions
 import requests
 
 
 
 app = FastAPI(
     title="CostWatch API",
-    description="Peter e cel mai tare OM",
+    description="Merge?Habar nu am",
 )
 origins = [
     "http://localhost.tiangolo.com",
@@ -43,11 +39,11 @@ async def revolut_session(request:Request):
 
 @app.get("/available-banks")
 async def get_banks():
-    token = get_enable_banking_acces_token() # Your token generator
+    token = get_enable_banking_acces_token() # Genratorul meu de tokens
     headers = {
         "Authorization": f"Bearer {token}",
     }
-    # Fetch all banks registered in Romania (RO)
+    # Iau Toate Bancile din Romania
     response = requests.get("https://api.enablebanking.com/aspsps?country=RO", headers=headers)
     return response.json()
 @app.get("/finalize")
@@ -55,5 +51,5 @@ async def finalize(code: str):
     return finalize_session(code)
 
 @app.get("/transactions/{account_uid}")
-async def transactions(account_uid: str):
+async def transactions_account(account_uid: str):
     return get_account_transactions(account_uid)
