@@ -118,10 +118,9 @@ def get_account_transactions(account_uid: str):
         "Content-Type": "application/json"
     }
 
-    # Endpoint to fetch transactions for a specific account UID
+    #Endpoint pentru un itiliztor anumit
     transactions_url = f"https://api.enablebanking.com/accounts/{account_uid}/transactions"
     
-    # You can optionaly filter by date, e.g. f"{transactions_url}?date_from=2024-01-01"
     response = requests.get(transactions_url, headers=headers)
     
     return response.json()
