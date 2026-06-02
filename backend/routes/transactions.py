@@ -55,7 +55,7 @@ def get_transactions():
     res=requests.get(transactions_url, headers=headers)
     
     return res.json()
-from datetime import datetime, timedelta, timezone
+
 
 def start_revolut_session():
     token = get_enable_banking_acces_token()
@@ -123,4 +123,12 @@ def get_account_transactions(account_uid: str):
     
     response = requests.get(transactions_url, headers=headers)
     
+    return response.json()
+def get_all_accounts():
+    token=get_enable_banking_acces_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    response = requests.get("https://api.enablebanking.com/accounts", headers=headers)
     return response.json()

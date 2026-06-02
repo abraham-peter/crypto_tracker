@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Request
 from fastapi.middleware.cors import CORSMiddleware
 # from db import create_db_and_tables
-from routes.transactions import get_transactions,start_revolut_session,get_enable_banking_acces_token,finalize_session,get_account_transactions
+from routes.transactions import get_transactions,start_revolut_session,get_enable_banking_acces_token,finalize_session,get_all_accounts,get_account_transactions
 import requests
 
 
@@ -46,6 +46,10 @@ async def get_banks():
 @app.get("/finalize")
 async def finalize(code: str):
     return finalize_session(code)
+
+@app.get("/accounts")
+async def accounts():
+    return get_all_accounts
 
 @app.get("/transactions/{account_uid}")
 async def transactions_account(account_uid: str):
