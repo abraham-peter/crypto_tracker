@@ -60,7 +60,7 @@ def get_transactions():
     res=requests.get(transactions_url, headers=headers)
     
     return res.json()
-from datetime import datetime, timedelta, timezone
+
 
 def start_revolut_session():
     token = get_enable_banking_acces_token()

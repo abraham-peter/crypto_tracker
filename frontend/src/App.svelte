@@ -4,6 +4,7 @@
   let accounts = [];
   let selectedAccount = null;
   let transactions = [];
+<<<<<<< HEAD
   
   let loading = true;
   let isConnecting = false;
@@ -115,13 +116,88 @@
     // Adăugăm un mic debounce opțional în mod normal, dar merge perfect și direct pe evenimente de input
     selectAccount(selectedAccount);
   }
+=======
+  let loading = true;
+  let isConnecting = false;
+  let loadingTransactions = false;
+  let error = null;
+  let statusMessage = "";
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
 
+  // FastAPI backend base URL
+  const BACKEND_URL = "http://127.0.0.1:8000";
+
+  // 1. Fetch connected accounts
+  async function loadAccounts() {
+    loading = true;
+    error = null;
+    try {
+      const res = await fetch(`${BACKEND_URL}/accounts`);
+      if (!res.ok) throw new Error("Could not load accounts.");
+      const data = await res.json();
+      accounts = data.accounts || [];
+      
+      // Auto-select the first account if found
+      if (accounts.length > 0) {
+        selectAccount(accounts[0]);
+      }
+    } catch (err) {
+      console.error(err);
+      error = "Error checking connected accounts. Make sure your FastAPI backend is running.";
+    } finally {
+      loading = false;
+    }
+  }
+
+  // 2. Fetch transactions for a selected account
+  async function selectAccount(account) {
+    selectedAccount = account;
+    loadingTransactions = true;
+    transactions = [];
+    try {
+      const id = account.id || account.accountId;
+      const res = await fetch(`${BACKEND_URL}/transactions/${id}`);
+      if (!res.ok) throw new Error("Could not retrieve transactions.");
+      const data = await res.json();
+      transactions = data.transactions || [];
+    } catch (err) {
+      console.error(err);
+      error = "Error loading transactions for this account.";
+    } finally {
+      loadingTransactions = false;
+    }
+  }
+
+  // 3. Start Connection Flow
+  async function handleConnect() {
+    isConnecting = true;
+    statusMessage = "Starting Revolut connection...";
+    try {
+      const res = await fetch(`${BACKEND_URL}/revolut-session`);
+      if (!res.ok) throw new Error("Failed to start session.");
+      const data = await res.json();
+      if (data.url) {
+        statusMessage = "Redirecting you to Revolut securely...";
+        // Direct browser redirect
+        window.location.href = data.url;
+      } else {
+        throw new Error("No authorization URL returned.");
+      }
+    } catch (err) {
+      console.error(err);
+      error = "Failed to start connection flow. Check your backend configurations.";
+      isConnecting = false;
+    }
+  }
+
+  // 4. Check on Mount for callback parameter '?code='
   onMount(async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
     if (code) {
       isConnecting = true;
+<<<<<<< HEAD
       statusMessage = "Se validează conexiunea cu banca...";
       try {
         const res = await fetch(`${BACKEND_URL}/finalize?code=${code}`);
@@ -139,33 +215,95 @@
       } catch (err) {
         console.error(err);
         error = "Eroare la finalizarea legăturii cu banca.";
+=======
+      statusMessage = "Connecting with Revolut. Exchanging credentials...";
+      try {
+        const res = await fetch(`${BACKEND_URL}/finalize?code=${code}`);
+        if (!res.ok) throw new Error("Credentials exchange failed.");
+        await res.json();
+        
+        statusMessage = "Account connected successfully!";
+        
+        // Remove the '?code=...' query parameter from the URL bar cleanly
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+      } catch (err) {
+        console.error(err);
+        error = "Failed to link card during callback exchange. Try again.";
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
       } finally {
         isConnecting = false;
       }
     } else {
       await loadAccounts();
     }
+<<<<<<< HEAD
   });
 
   // Formatori frontend simpli
   function formatDate(isoString) {
     if (!isoString) return 'N/A';
     return new Date(isoString).toLocaleDateString(undefined, {
+=======
+
+    await loadAccounts();
+  });
+
+  // Helpers to safely parse bank transaction properties
+  function getAmount(tx) {
+    if (tx.transactionAmount) {
+      return `${parseFloat(tx.transactionAmount.amount).toFixed(2)} ${tx.transactionAmount.currency}`;
+    }
+    if (tx.amount) {
+      return `${parseFloat(tx.amount).toFixed(2)} ${tx.currency || ''}`;
+    }
+    return '0.00';
+  }
+
+  function getMerchant(tx) {
+    if (tx.creditor && tx.creditor.name) return tx.creditor.name;
+    if (tx.creditorName) return tx.creditorName;
+    if (tx.remittanceInformation && tx.remittanceInformation[0]) return tx.remittanceInformation[0];
+    if (tx.remittanceInformationUnstructured) return tx.remittanceInformationUnstructured;
+    if (tx.description) return tx.description;
+    return 'Unknown Merchant';
+  }
+
+  function getDate(tx) {
+    const rawDate = tx.bookingDateTime || tx.bookingDate || tx.valueDate || tx.valueDateTime;
+    if (!rawDate) return 'N/A';
+    return new Date(rawDate).toLocaleDateString(undefined, {
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
   }
+<<<<<<< HEAD
 </script>
 
 <main class="min-h-screen bg-slate-950 text-slate-50 font-sans antialiased">
   <!-- Navigarea de sus -->
+=======
+
+  // Pre-emptive subscription detection matching logic
+  function isSubscription(tx) {
+    const merchant = getMerchant(tx).toLowerCase();
+    const keywords = ['spotify', 'netflix', 'youtube', 'google', 'apple', 'amazon', 'adobe', 'microsoft', 'github', 'openai', 'chatgpt', 'patreon'];
+    return keywords.some(kw => merchant.includes(kw));
+  }
+</script>
+
+<main class="min-h-screen bg-slate-950 text-slate-50 font-sans antialiased">
+  <!-- Top Navigation Header -->
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
   <header class="border-b border-slate-800 bg-slate-900/40 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <div class="h-6 w-6 rounded bg-indigo-600 flex items-center justify-center font-bold text-xs">CW</div>
         <span class="font-semibold text-lg tracking-tight">CostWatch</span>
       </div>
+<<<<<<< HEAD
       <div class="flex items-center gap-3">
         {#if accounts.length > 0}
           <button 
@@ -181,12 +319,19 @@
             {/if}
           </button>
         {/if}
+=======
+      <div>
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
         <button 
           on:click={handleConnect} 
           disabled={isConnecting}
           class="px-4 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow disabled:opacity-50"
         >
+<<<<<<< HEAD
           {isConnecting ? 'Se conectează...' : 'Conectează Revolut'}
+=======
+          {isConnecting ? 'Connecting...' : 'Connect Revolut'}
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
         </button>
       </div>
     </div>
@@ -237,17 +382,10 @@
       </div>
     {:else}
       <!-- Layout Principal Dashboard -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         
         <!-- Sidebar - Conturi salvate local -->
         <div class="md:col-span-1 space-y-4">
           <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Conturi Salvate local</h2>
-          <div class="space-y-2">
-            {#each accounts as account}
-              <button 
-                on:click={() => selectAccount(account)}
-                class="w-full text-left p-4 rounded-xl border transition-all relative overflow-hidden group
-                  {selectedAccount?.id === account.id
                     ? 'bg-slate-900 border-indigo-500 shadow-md shadow-indigo-950/20' 
                     : 'bg-slate-950 border-slate-800 hover:bg-slate-900/50 hover:border-slate-700'}"
               >
@@ -261,16 +399,6 @@
                 </div>
                 <div class="text-[11px] text-slate-500 mt-3 truncate">
                   IBAN: {account.id}
-                </div>
-              </button>
-            {/each}
-          </div>
-        </div>
-
-        <!-- Istoric Tranzacții cu filtre de Căutare -->
-        <div class="md:col-span-3 space-y-4">
-          
-          <!-- Bara de filtre -->
           <div class="bg-slate-900/30 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
             
             <!-- Căutare după nume -->
@@ -314,6 +442,18 @@
               </div>
               <span class="text-xs text-indigo-400 bg-indigo-950/30 px-2.5 py-1 rounded-full border border-indigo-900/40 font-medium">
                 {transactions.length} înregistrări găsite
+=======
+        <!-- Main Column - Transaction Details -->
+        <div class="md:col-span-3">
+          <div class="bg-slate-900/20 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+              <div>
+                <h2 class="text-lg font-medium text-slate-100">Transaction History</h2>
+                <p class="text-xs text-slate-400">Showing recent activity for the selected card</p>
+              </div>
+              <span class="text-xs text-indigo-400 bg-indigo-950/30 px-2.5 py-1 rounded-full border border-indigo-900/40 font-medium">
+                {transactions.length} Records Found
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
               </span>
             </div>
 
@@ -333,13 +473,7 @@
                       <th class="py-3.5 px-6 font-medium">Dată</th>
                       <th class="py-3.5 px-6 font-medium">Comerciant</th>
                       <th class="py-3.5 px-6 font-medium">Categorie</th>
-                      <th class="py-3.5 px-6 font-medium text-right">Sumă</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-800/60 text-sm text-slate-300">
-                    {#each transactions as tx}
-                      <tr class="hover:bg-slate-900/20 transition-colors">
-                        <td class="py-4 px-6 text-xs text-slate-500 whitespace-nowrap">
+=======
                           {formatDate(tx.booking_date)}
                         </td>
                         <td class="py-4 px-6 font-medium text-slate-200">
@@ -359,6 +493,25 @@
                         </td>
                         <td class="py-4 px-6 text-right font-semibold text-slate-200 whitespace-nowrap">
                           {tx.amount.toFixed(2)} {tx.currency}
+=======
+                          {getDate(tx)}
+                        </td>
+                        <td class="py-4 px-6 font-medium text-slate-200">
+                          <div class="flex items-center gap-2">
+                            <span>{getMerchant(tx)}</span>
+                            {#if isSubscription(tx)}
+                              <span class="text-[9px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-900 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                                Sub Hint
+                              </span>
+                            {/if}
+                          </div>
+                        </td>
+                        <td class="py-4 px-6 text-xs text-slate-400">
+                          {isSubscription(tx) ? 'Subscription' : 'Purchase'}
+                        </td>
+                        <td class="py-4 px-6 text-right font-semibold text-slate-200 whitespace-nowrap">
+                          {getAmount(tx)}
+>>>>>>> d779bdf11ba7034c4d766756da85c118a97345e8
                         </td>
                       </tr>
                     {/each}
@@ -368,7 +521,6 @@
             {/if}
           </div>
         </div>
-
       </div>
     {/if}
   </div>
