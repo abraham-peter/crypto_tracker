@@ -1,6 +1,7 @@
 from fastapi import FastAPI,Request,Query
 from fastapi.middleware.cors import CORSMiddleware
 # from db import create_db_and_tables
+from auth import router as auth_router
 from routes.transactions import get_transactions,start_revolut_session,get_enable_banking_acces_token,finalize_session,get_account_transactions,save_accounts_to_db,save_transactions_to_db,get_all_accounts
 from typing import Optional
 from db import create_db_and_tables, Account, Transaction,engine
@@ -14,6 +15,7 @@ app = FastAPI(
     title="CostWatch API",
     description="Merge?Habar nu am",
 )
+app.include_router(auth_router)
 origins = [
     "http://localhost.tiangolo.com",
     "https://localhost.tiangolo.com",
@@ -22,7 +24,8 @@ origins = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:5173",
-    
+    "https://localhost:5173",
+    "https://127.0.0.1:5173",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -45,15 +48,39 @@ async def revolut_session(request: Request):
 
 @app.get("/finalize")
 async def finalize(code: str):
-    # Finalizează sesiunea cu Revolut
+    import traceback
+    print(f"\n[FastAPI] /finalize apelat pentru codul: {code}")
+    
+    # 1. Finalizează sesiunea cu Revolut (obții session_id și lista de conturi)
     session_data = finalize_session(code)
-    # După ce am finalizat sesiunea cu succes, facem prima sincronizare automată a conturilor
+    
+    # 2. Sincronizăm automat conturile și tranzacțiile direct în DB locală
     try:
-        remote_accounts = get_all_accounts()
-        if "accounts" in remote_accounts:
-            save_accounts_to_db(remote_accounts["accounts"])
+        # Folosim conturile deja returnate cu succes în session_data!
+        accounts_list = session_data.get("accounts", [])
+        print(f"[FastAPI] Am primit {len(accounts_list)} conturi de la Revolut.")
+        
+        if accounts_list:
+            # Apelăm funcția de salvare a conturilor
+            save_accounts_to_db(accounts_list)
+            
+            # Descărcăm și salvăm tranzacțiile pentru fiecare cont identificat (folosim 'uid' sau 'account_id')
+            for acc in accounts_list:
+                acc_id = acc.get("uid") or acc.get("account_id") or acc.get("id")
+                print(f"[FastAPI] Încearcă descărcarea tranzacțiilor pentru contul: {acc_id}")
+                
+                if acc_id:
+                    remote_tx = get_account_transactions(acc_id)
+                    tx_list = remote_tx.get("transactions", [])
+                    save_transactions_to_db(acc_id, tx_list)
+                    print(f"[FastAPI] Sincronizare inițială reușită: Am salvat {len(tx_list)} tranzacții pentru contul {acc_id}.")
+        else:
+            print("[FastAPI] Sincronizare inițială: Nu s-au găsit conturi în datele sesiunii.")
+            
     except Exception as e:
-        print(f"Eroare sincronizare automată inițială: {e}")
+        print("[FastAPI] Eroare gravă la sincronizarea automată inițială în /finalize:")
+        traceback.print_exc()
+        
     return session_data
 
 # Sincronizare manuală conturi și tranzacții din API în DB
